@@ -15,7 +15,7 @@ class GenericItem(ABC):
             return self.price
     
     def __str__(self):
-        return f"nome: {self.name} price: {self.price} foreign: {self.forieg}"
+        return f"nome: {self.name} price: {self.price} foreign: {self.foriegn}"
     
 #Normal Item
 class NormalItem(GenericItem):

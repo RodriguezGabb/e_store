@@ -1,9 +1,9 @@
 from typing import Any, Dict
-from customer.generic_customer import NormalCustomer, PromotionalCustomer, GenericCustomer as Customer
+from customer.generic_customer import NormalCustomer, PromotionalCustomer, GenericCustomer
 from store.store import Store
 from store_item.generic_item import NormalItem, ForeignItem
 
-def login(customers:Dict)->Customer:
+def login(customers:Dict)->GenericCustomer:
     """Take a dictionary of customers and make the user login.
         or return -1 in case of error"""
     username = input("Enter username: ")
@@ -44,11 +44,12 @@ def run_store()->None:
     Gabriel= NormalCustomer("Gabriel", "Rodriguez", 1000, "4321")
     
     #creazione del dizionario con i clienti
-    customers = {"Martina": Martina, "Gabriel": Gabriel}
-    customer=login(customers)
+    customers_dic: Dict[str, GenericCustomer] = {"Martina": Martina, "Gabriel": Gabriel}
+    customer=login(customers_dic)
     if customer==-1:
         print("quitting...")
         running=False
+
 
     while running:
 
