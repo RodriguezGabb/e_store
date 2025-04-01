@@ -1,9 +1,9 @@
 from typing import Dict, List
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
-from e_store.customer.generic_customer import *
-from e_store.store.store import Store
-from e_store.store_item.generic_item import GenericItem, NormalItem, ForeignItem
+from customer.generic_customer import *
+from store.store import Store
+from store_item.generic_item import GenericItem, NormalItem, ForeignItem
 '''GET: get_inventory: che lista tutti gli oggetti nell’inventario con le loro quantità e il loro
 prezzo'''
 
@@ -166,7 +166,7 @@ def purchase(request:PurchaseRequest)->PurchaseValidation:
         )
         
 
-'''Avvio del server'''   
+'''Avvio del server se lo avvio da server.py'''   
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
