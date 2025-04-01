@@ -1,6 +1,6 @@
 from typing import Dict, List
 from pydantic import BaseModel
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from e_store.customer.generic_customer import *
 from e_store.store.store import Store
 from e_store.store_item.generic_item import GenericItem, NormalItem, ForeignItem
@@ -37,7 +37,25 @@ class InventoryItem(BaseModel):
 class UserItem(BaseModel):
     name:str
     quantity:int
-    
+
+class ItemInformation(BaseModel):
+    name:str
+    price:str
+    quantity:int
+
+class UserBalance(BaseModel):
+    username: str
+    balance: float
+
+class PurchaseRequest(BaseModel):
+    username:str
+    pswd:str
+    item_name:str
+    quantity:int
+
+class PurchaseValidation(BaseModel):
+    validation:bool
+    message:str
 
 
 @app.get("/inventory",response_model=InventoryItem)
@@ -54,10 +72,10 @@ def get_inventory()-> List[InventoryItem]:
     return res
 
 @app.get("/user/{username}/items",response_model=UserItem)
-def get_user_items(username)-> List[UserItem]:
+def get_user_items(username:str)-> List[UserItem]:
     #controllo se l'user esiste
     if (username not in customers_dic):
-        raise Exception("Utente {username} non trovato!")
+        raise HTTPException(status_code=404, detail=f"User {username} not found!")
     user=customers_dic[username]
     res: List[UserItem]=[]
     for item_name, item_quantity in user.inventory.items():
@@ -68,6 +86,85 @@ def get_user_items(username)-> List[UserItem]:
             )
         )
     return res
+
+@app.get("/item/{item_name}")
+def get_item_information(item_name:str)->ItemInformation:
+    inventory= magazzino.inventory.get_all_products()
+    if item_name not in inventory:
+        raise HTTPException(status_code=404, detail=f"Item {item_name} not found ")
+    res= ItemInformation(
+        name=item_name,
+        price=inventory[item_name]["product"].get_price(),
+        quantity=inventory[item_name]["quantity"]
+    )
+    return res
+
+@app.get("/user/{username}/balance")
+def get_balance(username:str)->UserBalance:
+    if (username not in customers_dic):
+        raise HTTPException(status_code=404, detail=f"User {username} not found!")
+    user=customers_dic[username]
+    res=UserBalance(
+        username=username,
+        balance=user.money
+    ) 
+    return res
+
+@app.post("/purchase")
+def purchase(request:PurchaseRequest)->PurchaseValidation:
+    quantity=request.quantity
+    #controllo user
+    if request.username not in customers_dic:
+        return PurchaseValidation(
+            validation=False,
+            message=f"User {request.username} not found!"
+        )
+
+    user=customers_dic[request.username]
+    #controllo password
+    if request.pswd != user.password:
+        return PurchaseValidation(
+            validation=False,
+            message=f"The password is incorect!"
+        )
+        
+    inventory= magazzino.inventory.get_all_products()
+    #controllo item
+    if request.item_name not in inventory:
+        return PurchaseValidation(
+            validation=False,
+            message=f"Item {request.item_name} not found "
+        )
+    
+    item=inventory[request.item_name]
+    #controllo la quantità
+    if quantity> item["quantity"]:
+        return PurchaseValidation(
+            validation=False,
+            message=f"The quantity requested of {request.item_name}"
+        )
+    
+    item_price: float=item["product"].get_price()
+    total_cost: float= item_price * quantity
+    if user.money<total_cost:
+        return PurchaseValidation(
+            validation=False,
+            message=f"The total price is {total_cost} but you only have {user.money} on your acount"
+        )
+    
+    if magazzino.sell_item(user,request.item_name,request.quantity):
+        user.add_item(request.item_name,quantity)
+        return PurchaseValidation(
+            validation=True,
+            message=f"purchase of {quantity} {request.item_name} successful"
+        )
+        
+    else:
+        return PurchaseValidation(
+            validation=False,
+            message=f"Purchase faild, a error occured"
+        )
+        
 
 '''Avvio del server'''   
 if __name__ == "__main__":
