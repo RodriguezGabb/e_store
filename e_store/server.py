@@ -40,7 +40,7 @@ class UserItem(BaseModel):
 
 class ItemInformation(BaseModel):
     name:str
-    price:str
+    price:float
     quantity:int
 
 class UserBalance(BaseModel):
@@ -58,20 +58,20 @@ class PurchaseValidation(BaseModel):
     message:str
 
 
-@app.get("/inventory",response_model=InventoryItem)
+@app.get("/inventory")
 def get_inventory()-> List[InventoryItem]:
     res: List[InventoryItem]=[]
-    for name, info in magazzino.inventory.get_all_products().product():
+    for name, info in magazzino.inventory.get_all_products().items():
         res.append(
             InventoryItem(
                 name=name,
                 quantity=info["quantity"],
-                price=info["item"].get_price()
+                price=info["product"].get_price()
             )
         )
     return res
 
-@app.get("/user/{username}/items",response_model=UserItem)
+@app.get("/user/{username}/items")
 def get_user_items(username:str)-> List[UserItem]:
     #controllo se l'user esiste
     if (username not in customers_dic):
@@ -141,7 +141,7 @@ def purchase(request:PurchaseRequest)->PurchaseValidation:
     if quantity> item["quantity"]:
         return PurchaseValidation(
             validation=False,
-            message=f"The quantity requested of {request.item_name}"
+            message=f"The quantity requested of {request.item_name} is higher than the quantity in the inventoory"
         )
     
     item_price: float=item["product"].get_price()
