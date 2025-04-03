@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./server
+    ports: 
+    - "8000:8000"
+    container_name: server
+
+  client:
+    build: ./client
+    ports:
+     - "8001:8001"
+    container_name: client
+    depends_on:
+      - server

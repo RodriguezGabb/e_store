@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.templating import *
+from fastapi.templating import Jinja2Templates
 import requests
 
 app = FastAPI()

@@ -57,7 +57,9 @@ class PurchaseValidation(BaseModel):
     validation:bool
     message:str
 
-
+@app.get("/")
+def read_root():
+    return {"message": "Hello from the e_store server"}
 @app.get("/inventory")
 def get_inventory()-> List[InventoryItem]:
     res: List[InventoryItem]=[]
