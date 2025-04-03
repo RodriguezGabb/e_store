@@ -8,7 +8,7 @@ COPY requirment.txt .
 
 RUN pip install -r requirment.txt
 
-COPY e_store/server.py .
+COPY server.py .
 
 EXPOSE 8000
 
