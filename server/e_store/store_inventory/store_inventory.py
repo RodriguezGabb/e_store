@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from e_store.store_item.generic_item import GenericItem as Item
+from store_item.generic_item import GenericItem as Item
 
 
 class StoreInventory:

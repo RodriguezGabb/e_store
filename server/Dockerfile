@@ -8,7 +8,6 @@ COPY requirment.txt .
 
 RUN pip install -r requirment.txt
 
-COPY server.py .
 
 EXPOSE 8000
 
