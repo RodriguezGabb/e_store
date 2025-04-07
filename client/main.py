@@ -1,10 +1,12 @@
 import requests
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.templating import Jinja2Templates
-
+from os import path
 
 app= FastAPI()
-templates=Jinja2Templates(directory="../templates")
+path=path.abspath(__file__)
+path=path.replace("main.py", "templates")#trova il path assoluto dei temolates a priori
+templates=Jinja2Templates(directory=path)
 SERVICE_SERVER_URL="http://server:8000"
 
 @app.get("/")
@@ -18,6 +20,7 @@ def call_root_server():
     data_response=response.json()
     return{"message": "Client response (after my change)",
            "data_from_server": data_response}
+
 @app.get("/inventory")
 def inventory(request: Request):
     try:

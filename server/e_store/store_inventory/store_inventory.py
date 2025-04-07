@@ -23,4 +23,6 @@ class StoreInventory:
         """Ritorna l'inventario attuale"""
         return self.inventory
     
-
+    def __str__(self):
+        return f"inventory: {self.inventory}"
+    

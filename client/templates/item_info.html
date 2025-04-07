@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{item['name'] if item else "prodotto non trovato"}}</title>
+</head>
+
+<body>
+    {% if name %}
+    <h1>{{ item['name']}}</h1>
+    <p>Prezzo: {{item['price']}}</p>ù
+    <p>Quantità: {{item['quantity']}}</p>
+    {% else %}
+    <p>Prodotto non trovato</p>
+    {% endif %}
+    <a href="/">Torna alla Home</a>
+</body>
+
+</html>
