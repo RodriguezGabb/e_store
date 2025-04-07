@@ -2,9 +2,11 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY e_store/ /app
+ADD e_store .
 
 COPY requirment.txt .
+
+COPY server.py .
 
 RUN pip install -r requirment.txt
 

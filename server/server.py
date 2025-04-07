@@ -1,9 +1,9 @@
 from typing import Dict, List
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
-from customer.generic_customer import *
-from store.store import Store
-from store_item.generic_item import GenericItem, NormalItem, ForeignItem
+from e_store.customer.generic_customer import *
+from e_store.store.store import Store
+from e_store.store_item.generic_item import GenericItem, NormalItem, ForeignItem
 '''GET: get_inventory: che lista tutti gli oggetti nell’inventario con le loro quantità e il loro
 prezzo'''
 

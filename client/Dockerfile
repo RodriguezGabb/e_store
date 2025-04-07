@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY main.py .
 
+COPY templates .
+
 COPY requirment.txt .
 
 RUN pip install -r requirment.txt

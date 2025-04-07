@@ -1,5 +1,5 @@
-from store_inventory.store_inventory import StoreInventory
-from customer.generic_customer import GenericCustomer as Customer
+from e_store.store_inventory.store_inventory import StoreInventory
+from e_store.customer.generic_customer import GenericCustomer as Customer
 
 class Store:
     """Classe che contiene l'inventario e il saldo del negozzio"""

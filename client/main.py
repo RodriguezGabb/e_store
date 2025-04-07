@@ -10,7 +10,7 @@ templates=Jinja2Templates(directory=path)
 SERVICE_SERVER_URL="http://server:8000"
 
 @app.get("/")
-def call_root_server():
+def call_root_server(request:Request):
     try:
         response=requests.get(SERVICE_SERVER_URL)
         response.raise_for_status()
@@ -18,8 +18,7 @@ def call_root_server():
         raise HTTPException(status_code=500,
                             detail=f"Errorre nella comunicazione col server: {e}")
     data_response=response.json()
-    return{"message": "Client response (after my change)",
-           "data_from_server": data_response}
+    return templates.TemplateResponse('home.html',{"request": request,'response':{response}})
 
 @app.get("/inventory")
 def inventory(request: Request):
