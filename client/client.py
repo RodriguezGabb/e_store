@@ -5,7 +5,7 @@ from os import path
 
 app= FastAPI()
 path=path.abspath(__file__)
-path=path.replace("main.py", "templates")#trova il path assoluto dei temolates a priori
+path=path.replace("client.py", "templates")#trova il path assoluto dei temolates a priori
 templates=Jinja2Templates(directory=path)
 SERVICE_SERVER_URL="http://server:8000"
 
@@ -18,7 +18,7 @@ def call_root_server(request:Request):
         raise HTTPException(status_code=500,
                             detail=f"Errorre nella comunicazione col server: {e}")
     data_response=response.json()
-    return templates.TemplateResponse('home.html',{"request": request,'response':{response}})
+    return templates.TemplateResponse('home.html',{"request": request,'response':data_response})
 
 @app.get("/inventory")
 def inventory(request: Request):

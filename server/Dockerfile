@@ -2,7 +2,7 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-ADD e_store .
+ADD e_store /app/e_store
 
 COPY requirment.txt .
 
